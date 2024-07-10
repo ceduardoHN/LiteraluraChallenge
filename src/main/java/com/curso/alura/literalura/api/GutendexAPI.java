@@ -10,16 +10,13 @@ import java.net.http.HttpResponse;
  * @author Soriano
  */
 public class GutendexAPI {
-    private static final String ADDRESS_PATH = "https://gutendex.com/books";
+    private static final String ADDRESS_PATH = "https://gutendex.com/books/";
 
-    public String test(String address){
-        String url = String.format("%s/%s",
-                ADDRESS_PATH, address);
-
+    public String getData(String address){
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
+                    .uri(URI.create(address))
                     .build();
 
             HttpResponse<String> response = client
@@ -27,10 +24,25 @@ public class GutendexAPI {
 
             String json = response.body();
 
+            if (json == null || json.isEmpty()) {
+                throw new RuntimeException("La respuesta JSON está vacía");
+            }
+
             return json;
         }
         catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public String searchBook(String bookName){
+        String address = String.format("%s?search=%s",
+                ADDRESS_PATH, bookName.trim().replace(" ", "%20"));
+
+        return this.getData(address);
+    }
+
+    public String test(String address){
+        return this.getData(ADDRESS_PATH+address);
     }
 }

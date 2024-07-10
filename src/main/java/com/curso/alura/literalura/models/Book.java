@@ -2,20 +2,23 @@ package com.curso.alura.literalura.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.List;
 
 /**
  * @author Soriano
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Libro(
+public record Book(
         @JsonProperty("title")
-        String titulo,
+        String title,
         @JsonProperty("authors")
-        List<Autor> autores,
+        List<Author> authors,
         @JsonProperty("languages")
-        List<String> lenguajes,
+        List<String> languages,
         @JsonProperty("download_count")
-        int numeroDescargas
+        int downloadCount
 ) {
 }
