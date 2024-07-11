@@ -17,7 +17,7 @@ public class FormatObject {
                 """,
                 bookR.title(),
                 this.formatAuthors(bookR.authorRS()),
-                bookR.languages(),
+                this.formatLanguages(bookR.languages()),
                 bookR.downloadCount()
         );
     }
@@ -25,10 +25,25 @@ public class FormatObject {
     private String formatAuthors(List<AuthorR> authorRS) {
         StringBuilder sb = new StringBuilder();
 
-        authorRS.forEach(authorR -> {
-            sb.append(authorR.name());
-            if (authorRS.indexOf(authorR) < authorRS.size() - 1) {
+        authorRS.forEach(authorRIterator -> {
+            sb.append(authorRIterator.name());
+            if (authorRS.indexOf(authorRIterator) < authorRS.size() - 1) {
                 sb.append("; ");
+            }
+        });
+
+        return sb.toString();
+    }
+
+    private String formatLanguages(List<String> languages){
+        StringBuilder sb = new StringBuilder();
+
+        languages.forEach(lanIterator -> {
+            lanIterator.replace("[","").replace("]","");
+            sb.append(lanIterator);
+
+            if(languages.indexOf(lanIterator) < languages.size() - 1){
+                sb.append(", ");
             }
         });
 

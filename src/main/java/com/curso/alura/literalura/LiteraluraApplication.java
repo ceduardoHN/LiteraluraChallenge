@@ -51,7 +51,7 @@ public class LiteraluraApplication implements CommandLineRunner {
 				case 1:
 					Scanner entradaMenuOp1 = new Scanner(System.in);
 
-					System.out.println("\nIngresa el nombre del libro que quieres buscar/agregar:");
+					System.out.println("\nIngresa el nombre del libro que quieres buscar/agregar en tu biblioteca:");
 					String bookName = entradaMenuOp1.nextLine();
 
 					resultJson = gutApi.searchBook(bookName);
