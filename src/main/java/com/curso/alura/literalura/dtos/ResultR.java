@@ -1,17 +1,17 @@
-package com.curso.alura.literalura.models;
+package com.curso.alura.literalura.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.util.List;
 
+/**
+ * @author Soriano
+ */
 @JsonIgnoreProperties(ignoreUnknown = true)
-public record Result(
+public record ResultR(
         @JsonProperty("count")
         int count,
         @JsonProperty("results")
-        List<Book> books
+        List<BookR> bookRS
 ) {
 }

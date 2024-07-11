@@ -1,18 +1,26 @@
 package com.curso.alura.literalura;
 
 import com.curso.alura.literalura.api.GutendexAPI;
-import com.curso.alura.literalura.models.Book;
-import com.curso.alura.literalura.models.Result;
+import com.curso.alura.literalura.dtos.BookR;
+import com.curso.alura.literalura.dtos.ResultR;
 import com.curso.alura.literalura.api.ProcessData;
-import com.curso.alura.literalura.services.FormatObject;
+import com.curso.alura.literalura.services.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
+/**
+ * @author Soriano
+ */
 @SpringBootApplication
 public class LiteraluraApplication implements CommandLineRunner {
+	@Autowired
+	DataService dataService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(LiteraluraApplication.class, args);
@@ -30,7 +38,7 @@ public class LiteraluraApplication implements CommandLineRunner {
 //		outputBuilder.append("\n----------LIBRO (S)----------\n");
 
 		while(true){
-			System.out.println("-----------------MENÚ PRINCIPAL LITERALURA-----------------");
+			System.out.println("\n-----------------MENÚ PRINCIPAL LITERALURA-----------------");
 			System.out.println("1. Buscar/Agregar libro por título.");
 			System.out.println("2. Obtener libros registrados/buscados.");
 			System.out.println("3. Obtener autores registrados/buscados.");
@@ -47,27 +55,34 @@ public class LiteraluraApplication implements CommandLineRunner {
 					String bookName = entradaMenuOp1.nextLine();
 
 					resultJson = gutApi.searchBook(bookName);
-					Result bookResults = processData.getData(resultJson, Result.class);
+					ResultR bookResults = processData.getData(resultJson, ResultR.class);
 
 					if(bookResults.count()!=0){
 						StringBuilder outputBuilder = new StringBuilder();
 						outputBuilder.append("\n----------- LIBRO -----------\n");
 
-						bookResults.books().stream()
-						.sorted(Comparator.comparing(Book::downloadCount).reversed())
+						//MOSTRANDO LIBRO ENCONTRADO AL USUARIO
+						bookResults.bookRS().stream()
+						.sorted(Comparator.comparing(BookR::downloadCount).reversed())
 						.limit(1)
-						.forEach(book -> {
-							outputBuilder.append(formatter.formatBookInfo(book));
+						.forEach(bookR -> {
+							outputBuilder.append(formatter.formatBookInfo(bookR));
 							outputBuilder.append("-----------------------------\n");
 						});
-
 						System.out.println(outputBuilder.toString());
+
+						//GUARDANDO DATOS EN LA BASE
+						List<BookR> bookResultsSorted = bookResults.bookRS().stream()
+								.sorted(Comparator.comparing(BookR::downloadCount).reversed())
+								.limit(1)
+								.collect(Collectors.toList());
+						this.dataService.saveData(bookResultsSorted);
 					}
 					else{
 						String outPut = String.format("""
 
                                         El nombre '%s' de libro que ingresaste no se encontró.
-                                        Intenta con otro diferente.
+                                        Intenta con un nombre diferente.
                                         """,
 								bookName);
 						System.out.println(outPut);
@@ -75,21 +90,25 @@ public class LiteraluraApplication implements CommandLineRunner {
 
 					break;
 				case 2:
+
 					break;
 				case 3:
+
 					break;
 				case 4:
+
 					break;
 				case 5:
+
 					break;
 				case 0:
-					System.out.println("¡¡Nos vemos!!\nTe esperamos de vuelta.");
+					System.out.println("¡¡Nos vemos!!\nTe esperamos de vuelta.\n");
 					System.exit(0);
 
 					break;
 				case 7:
-					resultJson = gutApi.test("/");
-					Result booksData = processData.getData(resultJson, Result.class);
+					resultJson = gutApi.test("");
+					ResultR booksData = processData.getData(resultJson, ResultR.class);
 
 					if(booksData.count()!=0){
 						String outPut = String.format("""
