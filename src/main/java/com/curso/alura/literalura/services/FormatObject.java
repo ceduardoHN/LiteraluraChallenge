@@ -2,13 +2,25 @@ package com.curso.alura.literalura.services;
 
 import com.curso.alura.literalura.dtos.AuthorR;
 import com.curso.alura.literalura.dtos.BookR;
+import com.curso.alura.literalura.models.Author;
+import com.curso.alura.literalura.models.Book;
+import com.curso.alura.literalura.models.BookAuthor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
  * @author Soriano
  */
+@Service
 public class FormatObject {
-    public String formatBookInfo(BookR bookR) {
+    @Autowired
+    AuthorService authorService;
+
+    @Autowired
+    BookAuthorService bookAuthorService;
+
+    public String formatBookRInfo(BookR bookR) {
         return String.format("""
                 Título: %s
                 Autor(es): %s
@@ -16,13 +28,42 @@ public class FormatObject {
                 Número de Descargas: %d
                 """,
                 bookR.title(),
-                this.formatAuthors(bookR.authorRS()),
+                this.formatAuthorRs(bookR.authorRS()),
                 this.formatLanguages(bookR.languages()),
                 bookR.downloadCount()
         );
     }
 
-    private String formatAuthors(List<AuthorR> authorRS) {
+    public String formatBookInfo(Book book) {
+        return String.format("""
+                Título: %s
+                Autor(es): %s
+                Idioma(s): %s
+                Número de Descargas: %d
+                """,
+                book.getTitle(),
+                this.formatAuthors(this.bookAuthorService.getAuthorsByIdBook(book.getIdBook())),
+                this.formatLanguages(book.getLanguages()),
+                book.getDownloadCount()
+        );
+    }
+
+    private String formatAuthors(List<BookAuthor> bookAuthors) {
+        StringBuilder sb = new StringBuilder();
+
+        bookAuthors.forEach(bookAuthorIterator -> {
+            Author author = this.authorService.getAuthorById(bookAuthorIterator.getIdAuthor().getIdAuthor());
+            sb.append(author.getName());
+
+            if (bookAuthors.indexOf(bookAuthorIterator) < bookAuthors.size() - 1) {
+                sb.append("; ");
+            }
+        });
+
+        return sb.toString();
+    }
+
+    private String formatAuthorRs(List<AuthorR> authorRS) {
         StringBuilder sb = new StringBuilder();
 
         authorRS.forEach(authorRIterator -> {

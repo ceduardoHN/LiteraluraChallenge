@@ -4,6 +4,7 @@ import com.curso.alura.literalura.api.GutendexAPI;
 import com.curso.alura.literalura.dtos.BookR;
 import com.curso.alura.literalura.dtos.ResultR;
 import com.curso.alura.literalura.api.ProcessData;
+import com.curso.alura.literalura.models.Book;
 import com.curso.alura.literalura.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,6 +23,12 @@ public class LiteraluraApplication implements CommandLineRunner {
 	@Autowired
 	DataService dataService;
 
+	@Autowired
+	BookService bookService;
+
+	@Autowired
+	FormatObject formatterService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(LiteraluraApplication.class, args);
 	}
@@ -31,11 +38,7 @@ public class LiteraluraApplication implements CommandLineRunner {
 		Scanner entradaMenu = new Scanner(System.in);
 		GutendexAPI gutApi = new GutendexAPI();
 		ProcessData processData = new ProcessData();
-		FormatObject formatter = new FormatObject();
 		String resultJson = "";
-
-//		StringBuilder outputBuilder = new StringBuilder();
-//		outputBuilder.append("\n----------LIBRO (S)----------\n");
 
 		while(true){
 			System.out.println("\n-----------------MENÚ PRINCIPAL LITERALURA-----------------");
@@ -62,8 +65,8 @@ public class LiteraluraApplication implements CommandLineRunner {
 						bookResults.bookRS().stream()
 							.sorted(Comparator.comparing(BookR::downloadCount).reversed())
 							.limit(1)
-							.forEach(bookIterator -> {
-								bookTitle.append(bookIterator.title());
+							.forEach(bookRIterator -> {
+								bookTitle.append(bookRIterator.title());
 							});
 
 						if(!this.dataService.verifyBook(bookTitle.toString())){
@@ -74,8 +77,8 @@ public class LiteraluraApplication implements CommandLineRunner {
 							bookResults.bookRS().stream()
 								.sorted(Comparator.comparing(BookR::downloadCount).reversed())
 								.limit(1)
-								.forEach(bookR -> {
-									outputBuilder.append(formatter.formatBookInfo(bookR));
+								.forEach(bookRIterator -> {
+									outputBuilder.append(formatterService.formatBookRInfo(bookRIterator));
 									outputBuilder.append("-----------------------------\n");
 								});
 							System.out.println(outputBuilder.toString());
@@ -108,6 +111,15 @@ public class LiteraluraApplication implements CommandLineRunner {
 
 					break;
 				case 2:
+					List<Book> books = this.bookService.getAllBooks();
+					StringBuilder outputBuilder = new StringBuilder();
+
+					books.forEach(bookIterator -> {
+						outputBuilder.append("\n----------- LIBRO -----------\n");
+						outputBuilder.append(formatterService.formatBookInfo(bookIterator));
+						outputBuilder.append("-----------------------------\n");
+					});
+					System.out.println(outputBuilder.toString());
 
 					break;
 				case 3:
@@ -147,6 +159,8 @@ public class LiteraluraApplication implements CommandLineRunner {
 
 					break;
 				case 8:
+					//this.bookAuthorService.getAuthorsByIdBook(3).forEach(System.out::println);
+
 
 					break;
 				default:
