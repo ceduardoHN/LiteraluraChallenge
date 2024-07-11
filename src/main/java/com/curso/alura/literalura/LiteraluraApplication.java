@@ -58,25 +58,43 @@ public class LiteraluraApplication implements CommandLineRunner {
 					ResultR bookResults = processData.getData(resultJson, ResultR.class);
 
 					if(bookResults.count()!=0){
-						StringBuilder outputBuilder = new StringBuilder();
-						outputBuilder.append("\n----------- LIBRO -----------\n");
-
-						//MOSTRANDO LIBRO ENCONTRADO AL USUARIO
+						StringBuilder bookTitle = new StringBuilder();
 						bookResults.bookRS().stream()
-						.sorted(Comparator.comparing(BookR::downloadCount).reversed())
-						.limit(1)
-						.forEach(bookR -> {
-							outputBuilder.append(formatter.formatBookInfo(bookR));
-							outputBuilder.append("-----------------------------\n");
-						});
-						System.out.println(outputBuilder.toString());
+							.sorted(Comparator.comparing(BookR::downloadCount).reversed())
+							.limit(1)
+							.forEach(bookIterator -> {
+								bookTitle.append(bookIterator.title());
+							});
 
-						//GUARDANDO DATOS EN LA BASE
-						List<BookR> bookResultsSorted = bookResults.bookRS().stream()
+						if(!this.dataService.verifyBook(bookTitle.toString())){
+							StringBuilder outputBuilder = new StringBuilder();
+							outputBuilder.append("\n----------- LIBRO -----------\n");
+
+							//MOSTRANDO LIBRO ENCONTRADO AL USUARIO
+							bookResults.bookRS().stream()
+								.sorted(Comparator.comparing(BookR::downloadCount).reversed())
+								.limit(1)
+								.forEach(bookR -> {
+									outputBuilder.append(formatter.formatBookInfo(bookR));
+									outputBuilder.append("-----------------------------\n");
+								});
+							System.out.println(outputBuilder.toString());
+
+							//GUARDANDO DATOS EN LA BASE
+							List<BookR> bookResultsSorted = bookResults.bookRS().stream()
 								.sorted(Comparator.comparing(BookR::downloadCount).reversed())
 								.limit(1)
 								.collect(Collectors.toList());
-						this.dataService.saveData(bookResultsSorted);
+							this.dataService.saveData(bookResultsSorted);
+						}
+						else{
+							String outPut = String.format("""
+
+                                        El nombre '%s' de libro que ingresaste ya existe.
+                                        """,
+									bookName);
+							System.out.println(outPut);
+						}
 					}
 					else{
 						String outPut = String.format("""
@@ -126,6 +144,9 @@ public class LiteraluraApplication implements CommandLineRunner {
 									NO SE ENCONTRARON LIBROS.
 								""");
 					}
+
+					break;
+				case 8:
 
 					break;
 				default:

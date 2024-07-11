@@ -34,11 +34,17 @@ public class DataService {
 
             bookIterator.authorRS().forEach(authorIterator -> {
                 Author author = new Author();
+                Author savedAuthor = new Author();
                 author.setName(authorIterator.name());
                 author.setBirthYear(authorIterator.birthYear());
                 author.setDeathYear(authorIterator.deathYear());
 
-                Author savedAuthor = authorService.saveAuthor(author);
+                if(this.authorService.getAuthorByName(authorIterator.name())!=null){
+                    savedAuthor = this.authorService.getAuthorByName(authorIterator.name());
+                }
+                else{
+                    savedAuthor = authorService.saveAuthor(author);
+                }
 
                 BookAuthor bookAuthor = new BookAuthor();
                 bookAuthor.setIdBook(savedBook);
@@ -47,5 +53,15 @@ public class DataService {
                 bookAuthorService.saveBookAuthor(bookAuthor);
             });
         });
+    }
+
+    public boolean verifyBook(String title){
+        Book book = this.bookService.getBookByTitle(title);
+
+        if(book!=null){
+            return true;
+        }
+
+        return false;
     }
 }

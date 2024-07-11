@@ -23,6 +23,10 @@ public class AuthorService {
         return this.authorRepository.findById(idAuthor).orElse(null);
     }
 
+    public Author getAuthorByName(String name){
+        return this.authorRepository.findByName(name);
+    }
+
     @Transactional
     public Author saveAuthor(Author author){
         return this.authorRepository.save(author);
