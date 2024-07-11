@@ -1,5 +1,6 @@
 package com.curso.alura.literalura.services;
 
+import com.curso.alura.literalura.models.Author;
 import com.curso.alura.literalura.models.Book;
 import com.curso.alura.literalura.models.BookAuthor;
 import com.curso.alura.literalura.repositories.BookAuthorRepository;
@@ -19,10 +20,19 @@ public class BookAuthorService {
     @Autowired
     BookService bookService;
 
+    @Autowired
+    AuthorService authorService;
+
     public List<BookAuthor> getAuthorsByIdBook(long idBook){
         Book book = this.bookService.getBookById(idBook);
 
         return this.bookAuthorRepository.findByidBook(book);
+    }
+
+    public List<BookAuthor> getBooksByIdAuthor(long idAuthor){
+        Author author = this.authorService.getAuthorById(idAuthor);
+
+        return this.bookAuthorRepository.findByidAuthor(author);
     }
 
     @Transactional

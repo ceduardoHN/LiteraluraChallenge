@@ -1,5 +1,6 @@
 package com.curso.alura.literalura.repositories;
 
+import com.curso.alura.literalura.models.Author;
 import com.curso.alura.literalura.models.Book;
 import com.curso.alura.literalura.models.BookAuthor;
 import com.curso.alura.literalura.models.BookAuthorID;
@@ -13,4 +14,5 @@ import java.util.List;
 @Repository
 public interface BookAuthorRepository extends JpaRepository<BookAuthor, BookAuthorID> {
     List<BookAuthor> findByidBook(Book book);
+    List<BookAuthor> findByidAuthor(Author author);
 }

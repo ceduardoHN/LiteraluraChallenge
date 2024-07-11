@@ -20,6 +20,9 @@ public class FormatObject {
     @Autowired
     BookAuthorService bookAuthorService;
 
+    @Autowired
+    BookService bookService;
+
     public String formatBookRInfo(BookR bookR) {
         return String.format("""
                 Título: %s
@@ -48,12 +51,41 @@ public class FormatObject {
         );
     }
 
+    public String formatAuthorInfo(Author author) {
+        return String.format("""
+                Nombre: %s
+                Año de Nacimiento: %d
+                Año de Fallecimiento: %d
+                Libros: %s
+                """,
+                author.getName(),
+                author.getBirthYear(),
+                author.getDeathYear(),
+                this.formatBooks(this.bookAuthorService.getBooksByIdAuthor(author.getIdAuthor()))
+        );
+    }
+
     private String formatAuthors(List<BookAuthor> bookAuthors) {
         StringBuilder sb = new StringBuilder();
 
         bookAuthors.forEach(bookAuthorIterator -> {
             Author author = this.authorService.getAuthorById(bookAuthorIterator.getIdAuthor().getIdAuthor());
             sb.append(author.getName());
+
+            if (bookAuthors.indexOf(bookAuthorIterator) < bookAuthors.size() - 1) {
+                sb.append("; ");
+            }
+        });
+
+        return sb.toString();
+    }
+
+    private String formatBooks(List<BookAuthor> bookAuthors) {
+        StringBuilder sb = new StringBuilder();
+
+        bookAuthors.forEach(bookAuthorIterator -> {
+            Book book = this.bookService.getBookById(bookAuthorIterator.getIdBook().getIdBook());
+            sb.append(book.getTitle());
 
             if (bookAuthors.indexOf(bookAuthorIterator) < bookAuthors.size() - 1) {
                 sb.append("; ");

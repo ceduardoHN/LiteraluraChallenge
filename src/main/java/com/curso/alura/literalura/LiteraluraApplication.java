@@ -4,6 +4,7 @@ import com.curso.alura.literalura.api.GutendexAPI;
 import com.curso.alura.literalura.dtos.BookR;
 import com.curso.alura.literalura.dtos.ResultR;
 import com.curso.alura.literalura.api.ProcessData;
+import com.curso.alura.literalura.models.Author;
 import com.curso.alura.literalura.models.Book;
 import com.curso.alura.literalura.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +30,9 @@ public class LiteraluraApplication implements CommandLineRunner {
 	@Autowired
 	FormatObject formatterService;
 
+	@Autowired
+	AuthorService authorService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(LiteraluraApplication.class, args);
 	}
@@ -39,6 +43,7 @@ public class LiteraluraApplication implements CommandLineRunner {
 		GutendexAPI gutApi = new GutendexAPI();
 		ProcessData processData = new ProcessData();
 		String resultJson = "";
+		StringBuilder outputBuilder = new StringBuilder();
 
 		while(true){
 			System.out.println("\n-----------------MENÚ PRINCIPAL LITERALURA-----------------");
@@ -51,7 +56,7 @@ public class LiteraluraApplication implements CommandLineRunner {
 			int opcionMenu = entradaMenu.nextInt();
 
 			switch(opcionMenu) {
-				case 1:
+				case 1:		//BUSCAR/AGREGAR LIBROS
 					Scanner entradaMenuOp1 = new Scanner(System.in);
 
 					System.out.println("\nIngresa el nombre del libro que quieres buscar/agregar en tu biblioteca:");
@@ -70,10 +75,8 @@ public class LiteraluraApplication implements CommandLineRunner {
 							});
 
 						if(!this.dataService.verifyBook(bookTitle.toString())){
-							StringBuilder outputBuilder = new StringBuilder();
-							outputBuilder.append("\n----------- LIBRO -----------\n");
-
 							//MOSTRANDO LIBRO ENCONTRADO AL USUARIO
+							outputBuilder.append("\n----------- LIBRO -----------\n");
 							bookResults.bookRS().stream()
 								.sorted(Comparator.comparing(BookR::downloadCount).reversed())
 								.limit(1)
@@ -110,9 +113,8 @@ public class LiteraluraApplication implements CommandLineRunner {
 					}
 
 					break;
-				case 2:
+				case 2:		//BUSCAR LIBROS GUARDADOS/REGISTRADOS
 					List<Book> books = this.bookService.getAllBooks();
-					StringBuilder outputBuilder = new StringBuilder();
 
 					books.forEach(bookIterator -> {
 						outputBuilder.append("\n----------- LIBRO -----------\n");
@@ -122,13 +124,21 @@ public class LiteraluraApplication implements CommandLineRunner {
 					System.out.println(outputBuilder.toString());
 
 					break;
-				case 3:
+				case 3:		//BUSCAR AUTORES GUARDADOS/REGISTRADOS
+					List<Author> authors = this.authorService.getAllAuthors();
+
+					authors.forEach(authorIterator -> {
+						outputBuilder.append("\n----------- AUTOR -----------\n");
+						outputBuilder.append(formatterService.formatAuthorInfo(authorIterator));
+						outputBuilder.append("-----------------------------\n");
+					});
+					System.out.println(outputBuilder.toString());
 
 					break;
-				case 4:
+				case 4:		//BUSCAR AUTORES VIVOS EN DETERMINADO AÑO
 
 					break;
-				case 5:
+				case 5:		//BUSCAR LIBROS POR IDIOMA
 
 					break;
 				case 0:
