@@ -43,7 +43,6 @@ public class LiteraluraApplication implements CommandLineRunner {
 		GutendexAPI gutApi = new GutendexAPI();
 		ProcessData processData = new ProcessData();
 		String resultJson = "";
-		StringBuilder outputBuilder = new StringBuilder();
 
 		while(true){
 			System.out.println("\n-----------------MENÚ PRINCIPAL LITERALURA-----------------");
@@ -58,6 +57,7 @@ public class LiteraluraApplication implements CommandLineRunner {
 			switch(opcionMenu) {
 				case 1:		//BUSCAR/AGREGAR LIBROS
 					Scanner entradaMenuOp1 = new Scanner(System.in);
+					StringBuilder outPutBuilderOp1 = new StringBuilder();
 
 					System.out.println("\nIngresa el nombre del libro que quieres buscar/agregar en tu biblioteca:");
 					String bookName = entradaMenuOp1.nextLine();
@@ -76,15 +76,15 @@ public class LiteraluraApplication implements CommandLineRunner {
 
 						if(!this.dataService.verifyBook(bookTitle.toString())){
 							//MOSTRANDO LIBRO ENCONTRADO AL USUARIO
-							outputBuilder.append("\n----------- LIBRO -----------\n");
+							outPutBuilderOp1.append("\n----------- LIBRO -----------\n");
 							bookResults.bookRS().stream()
 								.sorted(Comparator.comparing(BookR::downloadCount).reversed())
 								.limit(1)
 								.forEach(bookRIterator -> {
-									outputBuilder.append(formatterService.formatBookRInfo(bookRIterator));
-									outputBuilder.append("-----------------------------\n");
+									outPutBuilderOp1.append(formatterService.formatBookRInfo(bookRIterator));
+									outPutBuilderOp1.append("-----------------------------\n");
 								});
-							System.out.println(outputBuilder.toString());
+							System.out.println(outPutBuilderOp1.toString());
 
 							//GUARDANDO DATOS EN LA BASE
 							List<BookR> bookResultsSorted = bookResults.bookRS().stream()
@@ -115,28 +115,31 @@ public class LiteraluraApplication implements CommandLineRunner {
 					break;
 				case 2:		//BUSCAR LIBROS GUARDADOS/REGISTRADOS
 					List<Book> books = this.bookService.getAllBooks();
+					StringBuilder outPutBuilderOp2 = new StringBuilder();
 
 					books.forEach(bookIterator -> {
-						outputBuilder.append("\n----------- LIBRO -----------\n");
-						outputBuilder.append(formatterService.formatBookInfo(bookIterator));
-						outputBuilder.append("-----------------------------\n");
+						outPutBuilderOp2.append("\n----------- LIBRO -----------\n");
+						outPutBuilderOp2.append(formatterService.formatBookInfo(bookIterator));
+						outPutBuilderOp2.append("-----------------------------\n");
 					});
-					System.out.println(outputBuilder.toString());
+					System.out.println(outPutBuilderOp2.toString());
 
 					break;
 				case 3:		//BUSCAR AUTORES GUARDADOS/REGISTRADOS
 					List<Author> authors = this.authorService.getAllAuthors();
+					StringBuilder outPutBuilderOp3 = new StringBuilder();
 
 					authors.forEach(authorIterator -> {
-						outputBuilder.append("\n----------- AUTOR -----------\n");
-						outputBuilder.append(formatterService.formatAuthorInfo(authorIterator));
-						outputBuilder.append("-----------------------------\n");
+						outPutBuilderOp3.append("\n----------- AUTOR -----------\n");
+						outPutBuilderOp3.append(formatterService.formatAuthorInfo(authorIterator));
+						outPutBuilderOp3.append("-----------------------------\n");
 					});
-					System.out.println(outputBuilder.toString());
+					System.out.println(outPutBuilderOp3.toString());
 
 					break;
 				case 4:		//BUSCAR AUTORES VIVOS EN DETERMINADO AÑO
 					Scanner entradaMenuOp4 = new Scanner(System.in);
+					StringBuilder outPutBuilderOp4 = new StringBuilder();
 
 					System.out.println("\nIngresa el año:");
 					int year = entradaMenuOp4.nextInt();
@@ -144,14 +147,44 @@ public class LiteraluraApplication implements CommandLineRunner {
 					List<Author> authorsAlive = this.authorService.getAuthorsAliveByYear(year);
 
 					authorsAlive.forEach(authorIterator -> {
-						outputBuilder.append("\n----------- AUTOR -----------\n");
-						outputBuilder.append(formatterService.formatAuthorInfo(authorIterator));
-						outputBuilder.append("-----------------------------\n");
+						outPutBuilderOp4.append("\n----------- AUTOR -----------\n");
+						outPutBuilderOp4.append(formatterService.formatAuthorInfo(authorIterator));
+						outPutBuilderOp4.append("-----------------------------\n");
 					});
-					System.out.println(outputBuilder.toString());
+					System.out.println(outPutBuilderOp4.toString());
 
 					break;
 				case 5:		//BUSCAR LIBROS POR IDIOMA
+					Scanner entradaMenuOp5 = new Scanner(System.in);
+					StringBuilder outPutBuilderOp5 = new StringBuilder();
+
+					String outPutOptions = """
+                                        
+                                        Ingresa el idioma para buscar libros. 
+                                        Las opciones son las siguientes:
+                                        es - Español
+                                        en - Inglés
+                                        zh - Mandarín
+                                        pt - Portugués
+                                        nl - Holandés
+                                        de - Alemán    
+                                        otro* - Abreviatura de lenguaje soportada 
+                                        		por la API.
+                                        	*: Si la abreviatura no se reconoce 
+                                        			por la API, no se retornará nada 
+                                        			en la consola.                                 
+                                        """;
+					System.out.println(outPutOptions);
+					String language = entradaMenuOp5.nextLine();
+
+					List<Book> booksByLanguage = this.bookService.getBooksByLanguage(language);
+
+					booksByLanguage.forEach(bookIterator -> {
+						outPutBuilderOp5.append("\n----------- LIBRO -----------\n");
+						outPutBuilderOp5.append(formatterService.formatBookInfo(bookIterator));
+						outPutBuilderOp5.append("-----------------------------\n");
+					});
+					System.out.println(outPutBuilderOp5.toString());
 
 					break;
 				case 0:
@@ -159,35 +192,8 @@ public class LiteraluraApplication implements CommandLineRunner {
 					System.exit(0);
 
 					break;
-				case 7:
-					resultJson = gutApi.test("");
-					ResultR booksData = processData.getData(resultJson, ResultR.class);
-
-					if(booksData.count()!=0){
-						String outPut = String.format("""
-											
-										LIBROS ENCONTRADOS
-										%s
-										""",
-								booksData);
-
-						System.out.println(outPut);
-					}
-					else{
-						System.out.println("""
-									
-									NO SE ENCONTRARON LIBROS.
-								""");
-					}
-
-					break;
-				case 8:
-					//this.bookAuthorService.getAuthorsByIdBook(3).forEach(System.out::println);
-
-
-					break;
 				default:
-					String format = String.format("\n¡¡La opcion '%d' no es valida!!\n", opcionMenu);
+					String format = String.format("\n¡¡La opción '%d' no es válida!!\n", opcionMenu);
 					System.out.println(format);
 					break;
 			}

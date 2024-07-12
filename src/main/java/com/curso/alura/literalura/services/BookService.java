@@ -31,4 +31,8 @@ public class BookService {
     public Book saveBook(Book book){
         return this.bookRepository.save(book);
     }
+
+    public List<Book> getBooksByLanguage(String language) {
+        return bookRepository.findByLanguage(language);
+    }
 }
