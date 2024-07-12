@@ -115,48 +115,80 @@ public class LiteraluraApplication implements CommandLineRunner {
 					break;
 				case 2:		//BUSCAR LIBROS GUARDADOS/REGISTRADOS
 					List<Book> books = this.bookService.getAllBooks();
-					StringBuilder outPutBuilderOp2 = new StringBuilder();
 
-					books.forEach(bookIterator -> {
-						outPutBuilderOp2.append("\n----------- LIBRO -----------\n");
-						outPutBuilderOp2.append(formatterService.formatBookInfo(bookIterator));
-						outPutBuilderOp2.append("-----------------------------\n");
-					});
-					System.out.println(outPutBuilderOp2.toString());
+					if(!books.isEmpty()){
+						StringBuilder outPutBuilderOp2 = new StringBuilder();
+
+						books.forEach(bookIterator -> {
+							outPutBuilderOp2.append("\n----------- LIBRO -----------\n");
+							outPutBuilderOp2.append(formatterService.formatBookInfo(bookIterator));
+							outPutBuilderOp2.append("-----------------------------\n");
+						});
+						System.out.println(outPutBuilderOp2.toString());
+					}
+					else{
+						String outPut = """
+											
+											_____Aún no hay libros registrados._____
+											""";
+						System.out.println(outPut);
+					}
 
 					break;
 				case 3:		//BUSCAR AUTORES GUARDADOS/REGISTRADOS
 					List<Author> authors = this.authorService.getAllAuthors();
-					StringBuilder outPutBuilderOp3 = new StringBuilder();
 
-					authors.forEach(authorIterator -> {
-						outPutBuilderOp3.append("\n----------- AUTOR -----------\n");
-						outPutBuilderOp3.append(formatterService.formatAuthorInfo(authorIterator));
-						outPutBuilderOp3.append("-----------------------------\n");
-					});
-					System.out.println(outPutBuilderOp3.toString());
+					if(!authors.isEmpty()) {
+						StringBuilder outPutBuilderOp3 = new StringBuilder();
+
+						authors.forEach(authorIterator -> {
+							outPutBuilderOp3.append("\n----------- AUTOR -----------\n");
+							outPutBuilderOp3.append(formatterService.formatAuthorInfo(authorIterator));
+							outPutBuilderOp3.append("-----------------------------\n");
+						});
+						System.out.println(outPutBuilderOp3.toString());
+					}
+					else{
+						String outPut = """
+												
+												_____Aún no hay autores registrados._____
+												""";
+						System.out.println(outPut);
+					}
 
 					break;
 				case 4:		//BUSCAR AUTORES VIVOS EN DETERMINADO AÑO
 					Scanner entradaMenuOp4 = new Scanner(System.in);
-					StringBuilder outPutBuilderOp4 = new StringBuilder();
 
 					System.out.println("\nIngresa el año:");
 					int year = entradaMenuOp4.nextInt();
 
 					List<Author> authorsAlive = this.authorService.getAuthorsAliveByYear(year);
 
-					authorsAlive.forEach(authorIterator -> {
-						outPutBuilderOp4.append("\n----------- AUTOR -----------\n");
-						outPutBuilderOp4.append(formatterService.formatAuthorInfo(authorIterator));
-						outPutBuilderOp4.append("-----------------------------\n");
-					});
-					System.out.println(outPutBuilderOp4.toString());
+					if(!authorsAlive.isEmpty()) {
+						StringBuilder outPutBuilderOp4 = new StringBuilder();
+						authorsAlive.forEach(authorIterator -> {
+							outPutBuilderOp4.append("\n----------- AUTOR -----------\n");
+							outPutBuilderOp4.append(formatterService.formatAuthorInfo(authorIterator));
+							outPutBuilderOp4.append("-----------------------------\n");
+						});
+						System.out.println(outPutBuilderOp4.toString());
+					}
+					else{
+						String outPut = String.format("""
+												
+												----------------------------------
+												Aún no hay autores registrados que
+												estuviesen vivos en el año %d.
+												----------------------------------
+												""",
+											year);
+						System.out.println(outPut);
+					}
 
 					break;
 				case 5:		//BUSCAR LIBROS POR IDIOMA
 					Scanner entradaMenuOp5 = new Scanner(System.in);
-					StringBuilder outPutBuilderOp5 = new StringBuilder();
 
 					String outPutOptions = """
                                         
@@ -179,12 +211,26 @@ public class LiteraluraApplication implements CommandLineRunner {
 
 					List<Book> booksByLanguage = this.bookService.getBooksByLanguage(language);
 
-					booksByLanguage.forEach(bookIterator -> {
-						outPutBuilderOp5.append("\n----------- LIBRO -----------\n");
-						outPutBuilderOp5.append(formatterService.formatBookInfo(bookIterator));
-						outPutBuilderOp5.append("-----------------------------\n");
-					});
-					System.out.println(outPutBuilderOp5.toString());
+					if(!booksByLanguage.isEmpty()) {
+						StringBuilder outPutBuilderOp5 = new StringBuilder();
+						booksByLanguage.forEach(bookIterator -> {
+							outPutBuilderOp5.append("\n----------- LIBRO -----------\n");
+							outPutBuilderOp5.append(formatterService.formatBookInfo(bookIterator));
+							outPutBuilderOp5.append("-----------------------------\n");
+						});
+						System.out.println(outPutBuilderOp5.toString());
+					}
+					else{
+						String outPut = String.format("""
+													
+													---------------------------------
+													Aún no hay libros registrados que
+													coincidan con el lenguaje '%s'.
+													---------------------------------
+													""",
+												language);
+						System.out.println(outPut);
+					}
 
 					break;
 				case 0:
