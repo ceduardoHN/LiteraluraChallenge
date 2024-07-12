@@ -27,6 +27,10 @@ public class AuthorService {
         return this.authorRepository.findByName(name);
     }
 
+    public List<Author> getAuthorsAliveByYear(int year){
+        return this.authorRepository.findByBirthYearLessThanEqualAndDeathYearGreaterThanEqual(year, year);
+    }
+
     @Transactional
     public Author saveAuthor(Author author){
         return this.authorRepository.save(author);

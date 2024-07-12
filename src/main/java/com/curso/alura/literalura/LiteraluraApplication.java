@@ -136,6 +136,19 @@ public class LiteraluraApplication implements CommandLineRunner {
 
 					break;
 				case 4:		//BUSCAR AUTORES VIVOS EN DETERMINADO AÑO
+					Scanner entradaMenuOp4 = new Scanner(System.in);
+
+					System.out.println("\nIngresa el año:");
+					int year = entradaMenuOp4.nextInt();
+
+					List<Author> authorsAlive = this.authorService.getAuthorsAliveByYear(year);
+
+					authorsAlive.forEach(authorIterator -> {
+						outputBuilder.append("\n----------- AUTOR -----------\n");
+						outputBuilder.append(formatterService.formatAuthorInfo(authorIterator));
+						outputBuilder.append("-----------------------------\n");
+					});
+					System.out.println(outputBuilder.toString());
 
 					break;
 				case 5:		//BUSCAR LIBROS POR IDIOMA
