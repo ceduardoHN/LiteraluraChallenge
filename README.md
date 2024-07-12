@@ -35,7 +35,7 @@ Se recomienda ver el siguiente video para comprender mejor la explicación poste
 - Cuando el usuario ingresa un código de idioma que la API [Gutendex](https://gutendex.com/) no reconoce o no soporta. 
 
 ## Datos Relevantes
-[Alura Badge]()
+[Alura Badge](https://drive.google.com/file/d/1KNz-YaPmHDY0Jqg0TqB3Kx7U1i4qrYzV/view?usp=sharing)
 <br>
 <b>Autor: Eduardo Soriano</b>. <br>
 Perfil de Github: [ceduardoHN](https://github.com/ceduardoHN/) <br>
