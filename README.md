@@ -1,4 +1,4 @@
-# CurrencyConverterChallenge
+# LiteraluraChallenge
 
 ## Índice
 
