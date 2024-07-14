@@ -22,16 +22,16 @@ import java.util.stream.Collectors;
 @SpringBootApplication
 public class LiteraluraApplication implements CommandLineRunner {
 	@Autowired
-	DataService dataService;
+	private DataService dataService;
 
 	@Autowired
-	BookService bookService;
+	private BookService bookService;
 
 	@Autowired
-	FormatObject formatterService;
+	private FormatObject formatterService;
 
 	@Autowired
-	AuthorService authorService;
+	private AuthorService authorService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(LiteraluraApplication.class, args);

@@ -13,7 +13,7 @@ import java.util.List;
 @Service
 public class AuthorService {
     @Autowired
-    AuthorRepository authorRepository;
+    private AuthorRepository authorRepository;
 
     public List<Author> getAllAuthors(){
         return this.authorRepository.findAll();

@@ -15,13 +15,13 @@ import java.util.List;
 @Service
 public class FormatObject {
     @Autowired
-    AuthorService authorService;
+    private AuthorService authorService;
 
     @Autowired
-    BookAuthorService bookAuthorService;
+    private BookAuthorService bookAuthorService;
 
     @Autowired
-    BookService bookService;
+    private BookService bookService;
 
     public String formatBookRInfo(BookR bookR) {
         return String.format("""

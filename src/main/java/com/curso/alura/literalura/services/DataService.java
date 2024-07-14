@@ -15,13 +15,13 @@ import java.util.List;
 @Service
 public class DataService {
     @Autowired
-    BookService bookService;
+    private BookService bookService;
 
     @Autowired
-    AuthorService authorService;
+    private AuthorService authorService;
 
     @Autowired
-    BookAuthorService bookAuthorService;
+    private BookAuthorService bookAuthorService;
 
     @Transactional
     public void saveData(List<BookR> bookResults) {

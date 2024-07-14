@@ -15,13 +15,13 @@ import java.util.List;
 @Service
 public class BookAuthorService {
     @Autowired
-    BookAuthorRepository bookAuthorRepository;
+    private BookAuthorRepository bookAuthorRepository;
 
     @Autowired
-    BookService bookService;
+    private BookService bookService;
 
     @Autowired
-    AuthorService authorService;
+    private AuthorService authorService;
 
     public List<BookAuthor> getAuthorsByIdBook(long idBook){
         Book book = this.bookService.getBookById(idBook);
