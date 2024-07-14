@@ -18,6 +18,9 @@ Como requisito para este proyecto se necesitarón las siguientes herramientas:
 - Postman API Platform
     - Para probar las rutas proporcionadas por la API Gutendex.
     - [Postman](https://www.postman.com/)
+- PostgreSQL
+    - Como servicio y gestor de base de datos (pgAmdin 4).
+    - [PostgreSQL](https://www.postgresql.org/)
 
 ## Demostración del Sistema
 Se recomienda ver el siguiente video para comprender mejor la explicación posterior.<br>
